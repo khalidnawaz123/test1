@@ -1,0 +1,11 @@
+root@nameserver:~# id
+uid=0(root) gid=0(root) groups=0(root)
+root@nameserver:~# date
+Thu Nov 24 11:05:30 AM UTC 2022
+root@nameserver:~# systemd-machine-id-setup --print
+1c8855751c374fa89077b431e7242a24
+root@nameserver:~# dig @nameserver nameserver.mydomain.com
+;; communications error to 127.0.3.1#53: connection refused
+
+root@nameserver:~# dig @nameserver weserver.mydomain.com
+;; communications error to 127.0.3.1#53: connection refused

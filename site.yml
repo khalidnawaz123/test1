@@ -1,0 +1,5 @@
+---
+- name: "Configure nameserver using Ansible role"
+  hosts: all
+  roles:
+    - { role: bertvv.bind, become: yes}
