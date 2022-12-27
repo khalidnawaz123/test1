@@ -26,7 +26,7 @@ end
 #config.vm.provider "hyperv" do |h, override|
 #  h.enable_virtualization_extensions = true
 #  h.linked_clone = true
-#  h.maxmemory = 2047
+#  h.maxmemory = 2048
 #  h.cpus = 2
 
 #  override.vm.network "public_network", bridge: "Default Switch"
