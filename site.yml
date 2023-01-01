@@ -3,3 +3,4 @@
   hosts: all
   roles:
     - { role: bertvv.bind, become: yes}
+    - {role: bertvv.bind, become: yes}
