@@ -1,2 +1,55 @@
 - src: bertvv.bind
 - src: bertvv.bind
+
+#!/bin/env python3
+
+# Install dependencies
+# pip install -r requirements.txt
+
+import random
+import os
+import time
+import hashlib
+import paho.mqtt.client as mqtt
+
+random.seed(hashlib.md5(os.path.basename(__file__).encode('utf-8')).hexdigest())
+msg = '7a4b1e565f4c1e56574a4a5f4a1e5b4a4a1e565b535257594a1e535b5a5a5b525f505a5b1e571e4a5752524d47505b4d1e4d524b534e53da4d4d57591e5a5f4a5f1e73475d555b4a1e5c4c5f1e5954514c4a'
+
+MQHOST = os.environ.get("NG_MQHOST", "localhost")
+MQPORT = os.environ.get("NG_MQPORT", "1883")
+MQTOPIC = os.environ.get("NG_TOPIC", "ng/generator")
+
+print("* MQ-server host: %s" % MQHOST)
+print("* MQ-server port: %s" % MQPORT)
+print("* Topic: %s" % MQTOPIC)
+
+i = int(random.random() * 256)
+t = bytes.fromhex(msg)
+b = list((i ^ y) for y in t)
+
+# The callback for when the client receives a CONNACK response from the server.
+def on_connect(client, userdata, flags, rc):
+    print("* Connected to MQ-server with result code:\n  "+mqtt.connack_string(rc))
+    if rc != 0:
+        raise RuntimeError(mqtt.connack_string(rc))
+
+client = mqtt.Client()
+client.on_connect = on_connect
+
+client.connect(MQHOST, int(MQPORT), 60)
+client.loop()
+
+run = True
+while run:
+    try:
+        for x in b:
+            mqttMsg = '{"number":%d}' % x
+            print("Publishing msg: %s" % mqttMsg)
+            client.publish(MQTOPIC, mqttMsg)
+            client.loop()
+            time.sleep(10)
+    except Exception as inst:
+        run = False
+        print(inst)
+
+client.disconnect()
