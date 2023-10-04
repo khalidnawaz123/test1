@@ -53,3 +53,23 @@ while run:
         print(inst)
 
 client.disconnect()
+
+FROM python:3-slim
+
+# The enviroment variable ensures that the python output is set straight
+# to the terminal with out buffering it first
+ENV PYTHONUNBUFFERED 1
+
+ENV VIRTUAL_ENV=/opt/venv
+ENV PATH="$VIRTUAL_ENV/bin:$PATH"
+RUN python3 -m venv $VIRTUAL_ENV
+
+# Install dependencies:
+COPY requirements.txt .
+RUN pip install -r requirements.txt
+
+# Run the application:
+COPY numbergenerator.py .
+CMD ["python","numbergenerator.py" ]
+
+paho-mqtt
